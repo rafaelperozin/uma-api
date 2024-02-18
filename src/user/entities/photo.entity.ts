@@ -20,7 +20,7 @@ export class Photo {
   url: string;
 
   @ManyToOne(() => Client, client => client.photos)
-  client: Client;
+  user: Client;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

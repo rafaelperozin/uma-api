@@ -11,6 +11,6 @@ export class Client extends User {
   })
   avatar: string;
 
-  @OneToMany(() => Photo, photo => photo.client)
+  @OneToMany(() => Photo, photo => photo.user)
   photos: Photo[];
 }
