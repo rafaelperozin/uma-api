@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
 import { IsEmail, Length, Matches } from 'class-validator';
 import {
   BeforeInsert,
@@ -46,7 +45,6 @@ export class User {
   updatedAt: Date;
 
   @Column()
-  @Exclude({ toPlainOnly: true })
   @Length(6, 50)
   @Matches(/^(?=.*[0-9]).*$/, {
     message: 'Password must contain at least one number'

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import ormConfig from 'ormconfig';
+import ormConfig from 'config/orm.config';
 import { UserModule } from 'src/user/user.module';
 
 import { AppController } from './app.controller';
