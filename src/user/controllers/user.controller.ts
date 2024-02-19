@@ -1,6 +1,7 @@
 import { Body, Controller, Post, UploadedFiles, UseFilters, UseInterceptors } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/auth/public.decorator';
 import { QueryFailedExceptionFilter } from 'src/exceptions/query-failed.exception';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { CreateUserResponseDto } from 'src/user/dto/create-user-response.dto';
@@ -21,6 +22,7 @@ export class UserController {
    * @param files - The uploaded files for the user.
    * @returns A promise that resolves to the created user.
    */
+  @Public()
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiConsumes('multipart/form-data')

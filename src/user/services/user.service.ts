@@ -6,6 +6,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { CreateUserResponseDto } from 'src/user/dto/create-user-response.dto';
 import { Client } from 'src/user/entities/client.entity';
 import { Photo } from 'src/user/entities/photo.entity';
+import { User } from 'src/user/entities/user.entity';
 import { S3Folder, UploadedFilesDto } from 'src/user/models/user.model';
 import { Repository } from 'typeorm';
 
@@ -14,6 +15,7 @@ dotenv.config();
 @Injectable()
 export class UserService {
   constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Client) private readonly clientRepository: Repository<Client>,
     @InjectRepository(Photo) private readonly photoRepository: Repository<Photo>
   ) {}
@@ -55,6 +57,25 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = savedUser;
     return { avatar: savedUser.avatar, ...userWithoutPassword };
+  }
+
+  /**
+   * Finds a user by their email.
+   * @param email - The email of the user to find.
+   * @returns A Promise that resolves to the found user.
+   */
+  async findByEmail(email: string): Promise<User> {
+    // The password is hashed in the database. I used the bcrypt library to hash the password.
+    return await this.userRepository.findOne({ where: { email } });
+  }
+
+  /**
+   * Retrieves a user by their ID.
+   * @param id - The ID of the user to retrieve.
+   * @returns A Promise that resolves to the user with the specified ID.
+   */
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   /**
