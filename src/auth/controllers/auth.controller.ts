@@ -10,7 +10,6 @@ export class AuthController {
   @Public()
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    console.log('___________ 1. loginDto', loginDto);
     return this.authService.login(loginDto);
   }
 }

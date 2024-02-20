@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { myS3 } from 'config/aws.config';
+import { myS3 } from 'config/aws.config';
 import * as dotenv from 'dotenv';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { CreateUserResponseDto } from 'src/user/dto/create-user-response.dto';
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
 import { Client } from 'src/user/entities/client.entity';
 import { Photo } from 'src/user/entities/photo.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -29,7 +29,7 @@ export class UserService {
   async createUser(
     createUserDto: CreateUserDto,
     files: UploadedFilesDto
-  ): Promise<CreateUserResponseDto> {
+  ): Promise<UserResponseDto> {
     // 1. Upload Avatar
     const avatar =
       files.avatar &&
@@ -53,7 +53,6 @@ export class UserService {
 
     // 4. Save User in DB
     const savedUser = await this.clientRepository.save(user);
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPassword } = savedUser;
     return { avatar: savedUser.avatar, ...userWithoutPassword };
@@ -64,9 +63,8 @@ export class UserService {
    * @param email - The email of the user to find.
    * @returns A Promise that resolves to the found user.
    */
-  async findByEmail(email: string): Promise<User> {
-    // The password is hashed in the database. I used the bcrypt library to hash the password.
-    return await this.userRepository.findOne({ where: { email } });
+  async findByEmail(email: string): Promise<Client> {
+    return await this.clientRepository.findOne({ where: { email } });
   }
 
   /**
@@ -74,8 +72,24 @@ export class UserService {
    * @param id - The ID of the user to retrieve.
    * @returns A Promise that resolves to the user with the specified ID.
    */
-  async findOne(id: number): Promise<User> {
-    return await this.userRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Client> {
+    return await this.clientRepository.findOne({ where: { id } });
+  }
+
+  /**
+   * Validates a user's email and password.
+   * @param email - The email of the user.
+   * @param password - The password of the user.
+   * @returns A Promise that resolves to a UserResponseDto if the user is valid, otherwise null.
+   */
+  async validateUser(email: string, password: string): Promise<UserResponseDto> {
+    const user = await this.findByEmail(email);
+    if (user && (await user.validatePassword(password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 
   /**
@@ -115,7 +129,6 @@ export class UserService {
     folder: S3Folder
   ): Promise<string> {
     const fileName = this.getFileName(userEmail, file, folder);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: fileName,
@@ -124,11 +137,7 @@ export class UserService {
       ACL: 'public-read'
     };
 
-    // TODO: Use myS3 to upload the file to AWS.
-    // const uploadResult = await myS3.upload(params).promise();
-    const uploadResult = {
-      Location: 'https://example.com/photos/photo.jpg'
-    };
+    const uploadResult = await myS3.upload(params).promise();
     // Return the URL of the uploaded file
     return uploadResult.Location;
   }

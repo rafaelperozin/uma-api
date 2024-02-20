@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreatePhotoDto } from 'src/user/dto/create-photo.dto';
 
-export class CreateUserResponseDto {
+export class UserResponseDto {
   @ApiProperty({ example: 1 })
   id: number;
 
@@ -27,7 +27,7 @@ export class CreateUserResponseDto {
   role?: string;
 
   @ApiProperty({ example: 'https://s3.amazonaws.com/bucket/key' })
-  avatar: string;
+  avatar?: string;
 
   @ApiProperty({ type: CreatePhotoDto, isArray: true })
   photos?: CreatePhotoDto[];
