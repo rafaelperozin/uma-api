@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "a23dd672-f723-4a5e-8341-5c7f9106757e",
+		"name": "User Management Tool",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8476373"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": "Rafa",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Bacon",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "rafa6@pero.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Teste123",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "postman-cloud:///1eece1a9-51c5-4e80-8b24-26aaf0e3765b"
+						},
+						{
+							"key": "photos",
+							"type": "file",
+							"src": [
+								"postman-cloud:///1eece1a9-afc1-4f70-9668-087a5064ad0f",
+								"postman-cloud:///1eece1a9-af45-4740-9c9e-76412a69a688",
+								"postman-cloud:///1eece1a9-aec6-4800-b469-a852404a6fe1",
+								"postman-cloud:///1eece1a9-51c5-4e80-8b24-26aaf0e3765b"
+							]
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "isActive",
+							"value": "false",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('userJwtToken', jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rafa6@pero.com\",\n    \"password\": \"Teste123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userJwtToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "userJwtToken",
+			"value": ""
+		}
+	]
+}

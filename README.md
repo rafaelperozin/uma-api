@@ -14,19 +14,25 @@ To start the application in development mode:
 
 3. Certify you have [Docker](https://www.docker.com/get-started/) installed in your machine.
 
-4. In the terminal, navigate to the project directory (api root folder). *For example:*
+4. In the terminal, Navigate to the project's directory where the `Dockerfile` and `docker-compose.yml` files are located. You should *For example:*
 
 ```bash
 cd Documents/umt-api
 ```
 
-1. Use Docker Compose to start the services.
+5. Build the Dokcer Image based on `Dockerfile`
+
+```bash
+docker build -f Dockerfile .
+```
+
+6. Start the application running Docker Compose. This defines the services, networks and volumes based on your `docker-compose.yml`
 
 ```bash
 docker compose up
 ```
 
-1. Use the Postman collection provided to test the API.
+7. Use the Postman collection provided to test the API.
 
 ## Useful Links
 
