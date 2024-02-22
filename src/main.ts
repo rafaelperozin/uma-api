@@ -25,6 +25,7 @@ async function bootstrap() {
   app.setGlobalPrefix(process.env.API_PREFIX);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new QueryFailedExceptionFilter());
+  app.enableCors();
   await app.listen(process.env.API_PORT);
 }
 bootstrap();
