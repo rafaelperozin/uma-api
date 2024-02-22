@@ -35,7 +35,7 @@ export class UserController {
    * @returns A promise that resolves to the created user.
    */
   @Public()
-  @Post()
+  @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ schema: userApiBody })
