@@ -17,7 +17,7 @@ import { Public } from 'src/auth/public.decorator';
 import { QueryFailedExceptionFilter } from 'src/exceptions/query-failed.exception';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserResponseDto } from 'src/user/dto/user-response.dto';
-import { UploadedFilesDto } from 'src/user/models/user.model';
+import { RequestWithUser, UploadedFilesDto } from 'src/user/models/user.model';
 import { userApiBody } from 'src/user/models/user-api-body.model';
 import { UserService } from 'src/user/services/user.service';
 
@@ -40,12 +40,7 @@ export class UserController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({ schema: userApiBody })
   @ApiResponse({ status: 201, type: UserResponseDto })
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'avatar', maxCount: 1 },
-      { name: 'photos', maxCount: 4 }
-    ])
-  )
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'avatar', maxCount: 1 }, { name: 'photos' }]))
   async createUser(
     @Body() createUserDto: CreateUserDto,
     @UploadedFiles() files: UploadedFilesDto
@@ -57,7 +52,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   @ApiOperation({ summary: 'Get the user profile. **Requires Athentication token on header.' })
-  async getUserProfile(@Req() req: any): Promise<UserResponseDto> {
+  async getUserProfile(@Req() req: RequestWithUser): Promise<UserResponseDto> {
     const user = await this.userService.findOne(req.user.id);
     if (!user) {
       throw new NotFoundException('User not found');

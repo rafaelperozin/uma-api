@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { IsBoolean, IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString, Length, Matches } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({ type: String, example: 'John' })
@@ -23,6 +23,9 @@ export class CreateUserDto {
   @ApiProperty({ type: String, example: 'password123' })
   @IsString()
   @Length(6, 50)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,50}$/, {
+    message: 'Password must be alphanumeric'
+  })
   @Exclude({ toPlainOnly: true }) // Hide password from responses
   password: string;
 

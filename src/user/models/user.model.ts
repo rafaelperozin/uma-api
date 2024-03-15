@@ -14,3 +14,9 @@ export enum S3Folder {
   AVATARS = 'avatar',
   PHOTOS = 'photos'
 }
+
+export interface RequestWithUser extends Request {
+  user: {
+    id: number;
+  };
+}

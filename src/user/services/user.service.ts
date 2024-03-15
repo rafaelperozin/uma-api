@@ -73,7 +73,7 @@ export class UserService {
    * @returns A Promise that resolves to the user with the specified ID.
    */
   async findOne(id: number): Promise<Client> {
-    return await this.clientRepository.findOne({ where: { id } });
+    return await this.clientRepository.findOne({ where: { id }, relations: ['photos'] });
   }
 
   /**
@@ -176,6 +176,12 @@ export class UserService {
    * @returns A string containing the error message if there is an error, otherwise null.
    */
   validateUpladedFiles(files: UploadedFilesDto): string | null {
+    const numOfFiles = files.photos?.length;
+    const noPhotos = !files.photos;
+    if (noPhotos || numOfFiles < 4) {
+      throw new BadRequestException('Please upload at least 4 photos.');
+    }
+
     const avatarError = files.avatar?.length && this.validatePhoto(files.avatar[0]);
     if (avatarError) {
       throw new BadRequestException(avatarError);
