@@ -187,11 +187,11 @@ export class UserService {
       throw new BadRequestException(avatarError);
     }
 
-    const photosError =
-      files.photos?.length && this.validaMultiplePhotos(files.photos).find(error => error !== null);
-    if (photosError) {
-      throw new BadRequestException(photosError);
-    }
+    // const photosError =
+    //   files.photos?.length && this.validaMultiplePhotos(files.photos).find(error => error !== null);
+    // if (photosError) {
+    //   throw new BadRequestException(photosError);
+    // }
 
     return null; // No errors
   }
